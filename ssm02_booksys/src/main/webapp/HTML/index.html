@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>云借阅-图书管理系统</title>
+</head>
+<style>
+    h3{
+        width: 300px;
+        margin: 100px auto 30px auto;
+        text-align: center;
+    }
+    .table01 {
+        text-align: center;
+        margin: auto;
+        width: 300px;
+        border-radius: 30px;
+        border: pink 5px solid;
+
+    }
+    .table01 tr{
+        height: 50px;
+    }
+    .button01{
+        width: 220px;
+    }
+    .button01 input{
+        width: 180px;
+        height: 20px;
+        border: none;
+        border-bottom: solid;
+        outline: none;
+    }
+    .button02{
+        width: 130px;
+        height: 30px;
+        line-height: 30px;
+        font-size: 20px;
+        border-radius: 10px;
+    }
+    p{
+        text-align: center;
+        color: red;
+    }
+</style>
+<script>
+    var p1=document.getElementById("p1");
+
+</script>
+<body>
+<h3>云借阅-图书管理系统</h3>
+<form th:action="@{/user/login}" method="post">
+    <table class="table01" cellspacing="0" cellpadding="0" border="0">
+        <tr>
+            <th colspan="2">账 户 登 录</th>
+        </tr>
+        <tr>
+            <td>用户名</td>
+            <td class="button01"><input type="text" name="userName" required="required" placeholder="请输入账号"></td>
+        </tr>
+        <tr>
+            <td><span>密&nbsp;&nbsp;&nbsp;码</span></td>
+            <td class="button01" ><input type="password" name="userPassword" required="required" placeholder="请输入密码"></td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input class="button02" type="submit" value="登&nbsp;&nbsp;录">
+            </td>
+        </tr>
+    </table>
+    <p id="p1" th:text="${error}"></p>
+</form>
+</body>
+</html>

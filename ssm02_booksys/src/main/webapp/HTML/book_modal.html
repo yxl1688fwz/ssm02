@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<script th:src="@{/js/jquery.min.js}"></script>
+<div class="modal fade" id="borrowModal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" >
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="myModalLabel">图书信息</h3>
+            </div>
+            <div class="modal-body">
+                <form id="borrowBook" th:action="@{'/book/borrowBook/'+${book.bookId}}"  >
+                    <table class="table table-bordered table-striped" width="800px">
+<!--                        <span><input type="hidden" id="bid" name="id"></span>-->
+                        <tr>
+                            <td>图书名称</td>
+                            <td><input class="form-control" readonly name="name" id="bname"
+                                       th:value="${book.bookName}"></td>
+                            <td>标准ISBN</td>
+                            <td><input class="form-control" readonly name="isbn" id="bisbn"
+                                       th:value="${book.bookIsbn}"></td>
+                        </tr>
+                        <tr>
+                            <td>出版社</td>
+                            <td><input class="form-control" readonly name="press" id="bpress"
+                                       th:value="${book.bookPress}"></td>
+                            <td>作者</td>
+                            <td><input class="form-control" readonly name="author" id="bauthor"
+                                       th:value="${book.bookAuthor}"></td>
+                        </tr>
+                        <tr>
+                            <td>书籍页数</td>
+                            <td><input class="form-control" readonly name="pagination" id="bpagination"
+                                       th:value="${book.bookPagination}"></td>
+                            <td>归还时间<br/><span style="color: red">*</span></td>
+                            <!--时间控件中的内容改变时，调用js文件中的cg()方法*-->
+                            <td><input class="form-control" type="date" name="bookReturntime" id="time" onchange="cg()">
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="modal-footer">
+                        <!--点击保存按钮时，隐藏模态窗口并调用js文件中的borrow()方法-->
+                        <button class="btn btn-success" data-dismiss="modal" aria-hidden="true"
+                                type="submit" onclick="func()" disabled="disabled" id="savemsg">保存
+                        </button>
+                        <button class="btn btn-default" data-dismiss="modal" aria-hidden="true"
+                                type="button" onclick="exit()">关闭</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script>
+    //借阅窗口中时间标签的内容改变时执行
+    function cg() {
+        $("#savemsg").attr("disabled", false);
+        var rt = $("#time").val().split("-");
+        var ny = new Date().getFullYear();
+        var nm = new Date().getMonth() + 1;
+        var nd = new Date().getDate();
+        if (rt[0] < ny) {
+            alert("日期不能早于今天")
+            $("#savemsg").attr("disabled", true);
+        } else if (rt[0] == ny) {
+            if (rt[1] < nm) {
+                alert("日期不能早于今天")
+                $("#savemsg").attr("disabled", true);
+            } else if (rt[1] == nm) {
+                if (rt[2] < nd) {
+                    alert("日期不能早于今天")
+                    $("#savemsg").attr("disabled", true);
+                } else {
+                    $("#savemsg").attr("disabled", false);
+                }
+            }
+        }
+    }
+    function exit() {
+        window.location.href="http://localhost:8080/ssm02/book/to/selectNewbooks"
+        return false;
+    }
+    function func(){
+        return true;
+    }
+
+</script>
+</html>

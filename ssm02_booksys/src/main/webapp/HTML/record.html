@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>借阅记录</title>
+  <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
+  <link rel="stylesheet" th:href="@{/css/AdminLTE.css}">
+  <link rel="stylesheet" th:href="@{/css/pagination.css}">
+  <script th:src="@{/js/jquery.min.js}"></script>
+</head>
+<body class="hold-transition skin-red sidebar-mini">
+<!-- .box-body -->
+<div class="box-header with-border">
+  <h3 class="box-title">借阅记录</h3>
+</div>
+<div class="box-body">
+  <!--工具栏 数据搜索 -->
+  <div class="box-tools pull-right">
+    <div class="has-feedback">
+      <form th:action="@{/record/searchRecords/1}" method="post">
+        <span th:if="${session.loginUser.userRole =='ADMIN'}">
+          借阅人：<input name="recordBorrower" th:value="${record.recordBorrower}">&nbsp;&nbsp;&nbsp;
+        </span>
+        图书名称：<input name="recordBookname" th:value="${record.recordBookname}">&nbsp;&nbsp;&nbsp;
+        <button class="btn btn-default" type="submit">查询</button>
+      </form>
+    </div>
+  </div>
+  <!--工具栏 数据搜索 /-->
+  <!-- 数据列表 -->
+  <div class="table-box">
+    <!--数据表格-->
+    <table id="dataList" class="table table-bordered table-striped table-hover dataTable text-center">
+      <thead>
+      <tr>
+        <th class="sorting">借阅人</th>
+        <th class="sorting_asc">图书名称</th>
+        <th class="sorting">标准ISBN</th>
+        <th class="sorting">借阅时间</th>
+        <th class="sorting">归还时间</th>
+      </tr>
+      </thead>
+      <tbody>
+        <tr th:each="record:${page.list}">
+          <td th:text="${record.recordBorrower}"></td>
+          <td th:text="${record.recordBookname}"></td>
+          <td th:text="${record.recordBookisbn}"></td>
+          <td th:text="${record.recordBorrowtime}"></td>
+          <td th:text="${record.recordRemandtime}"></td>
+        </tr>
+      </tbody>
+    </table>
+    <!--数据表格/-->
+  </div>
+  <!-- 数据列表 /-->
+</div>
+<!-- /.box-body -->
+<div style="border-bottom: pink 2px solid;text-align: right;padding-right: 30px">
+<a th:if="${page.hasPreviousPage}" th:href="@{/record/searchRecords/1}">首页</a>
+<a th:if="${page.hasPreviousPage}" th:href="@{'/record/searchRecords/'+${page.prePage}}">上一页</a>
+<span th:each="num : ${page.navigatepageNums}" >
+    <a th:if="${page.pageNum==num}" style="color: red" th:href="@{'/record/searchRecords/'+${num}}" th:text="'['+${num}+']'"></a>
+    <a th:if="${page.pageNum!=num}" th:href="@{'/record/searchRecords/'+${num}}" th:text="${num}"></a>
+  </span>
+<a th:if="${page.hasNextPage}" th:href="@{'/record/searchRecords/'+${page.nextPage}}">下一页</a>
+<a th:if="${page.hasNextPage}" th:href="@{'/record/searchRecords/'+${page.pages}}">尾页</a>
+</div>
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <title>当前借阅</title>
+  <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
+  <link rel="stylesheet" th:href="@{/css/AdminLTE.css}">
+  <link rel="stylesheet" th:href="@{/css/pagination.css}">
+  <script th:src="@{/js/jquery.min.js}"></script>
+</head>
+<body class="hold-transition skin-red sidebar-mini">
+<!-- .box-body -->
+<div class="box-header with-border">
+  <h3 class="box-title">当前借阅</h3>
+</div>
+<div class="box-body">
+  <!--工具栏 数据搜索 -->
+  <div class="box-tools pull-right">
+    <div class="has-feedback">
+      <form th:action="@{/book/searchBorrow/1}" method="post">
+        图书名称：<input name="bookName" th:value="${book.bookName}">&nbsp;&nbsp;
+        图书作者：<input name="bookAuthor" th:value="${book.bookAuthor}">&nbsp;&nbsp;
+        出版社：<input name="bookPress" th:value="${book.bookPress}">&nbsp;
+        <input class="btn btn-default" type="submit" value="查询">
+      </form>
+    </div>
+  </div>
+  <!--工具栏 数据搜索 /-->
+  <!--数据列表-->
+  <div class="table-box">
+    <!-- 数据表格 -->
+    <table id="dataList" class="table table-bordered table-striped table-hover dataTable text-center">
+      <thead>
+      <tr>
+        <th class="sorting_asc">图书名称</th>
+        <th class="sorting">图书作者</th>
+        <th class="sorting">出版社</th>
+        <th class="sorting">标准ISBN</th>
+        <th class="sorting">书籍状态</th>
+        <th class="sorting">借阅人</th>
+        <th class="sorting">借阅时间</th>
+        <th class="sorting">应归还时间</th>
+        <th class="text-center">操作</th>
+      </tr>
+      </thead>
+      <tbody>
+        <tr th:each="book:${page.list}">
+          <td th:text="${book.bookName}"></td>
+          <td th:text="${book.bookAuthor}"></td>
+          <td th:text="${book.bookPress}"></td>
+          <td th:text="${book.bookIsbn}"></td>
+          <td th:switch="${book.bookStatus}">
+            <span th:case="1">借阅中</span>
+            <span th:case="2">归还中</span>
+          </td>
+          <td th:text="${book.bookBorrower}"></td>
+          <td th:text="${book.bookBorrowtime}"></td>
+          <td th:text="${book.bookReturntime}"></td>
+          <td class="text-center">
+              <button th:if="${book.bookStatus=='1'}" type="button" class="btn bg-olive btn-xs"
+                      th:onclick="'returnBook('+${book.bookId}+')'">归还
+              </button>
+              <button th:if="${book.bookStatus=='2'}" type="button" class="btn bg-olive btn-xs" disabled="disabled">归还中</button>
+              <button th:if="${session.loginUser.userRole =='ADMIN'}"
+                      type="button" class="btn bg-olive btn-xs"
+                      th:onclick="'returnConfirm('+${book.bookId}+')'">归还确认
+              </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <!-- 数据表格 /-->
+  </div>
+  <!-- 数据表格 /-->
+</div>
+<!-- /.box-body -->
+<div style="border-bottom: pink 2px solid;text-align: right;padding-right: 30px">
+  <a th:if="${page.hasPreviousPage}" th:href="@{/book/searchBorrow/1}">首页</a>
+  <a th:if="${page.hasPreviousPage}" th:href="@{'/book/searchBorrow/'+${page.prePage}}">上一页</a>
+  <span th:each="num : ${page.navigatepageNums}" >
+    <a th:if="${page.pageNum==num}" style="color: red" th:href="@{'/book/searchBorrow/'+${num}}" th:text="'['+${num}+']'"></a>
+    <a th:if="${page.pageNum!=num}" th:href="@{'/book/searchBorrow/'+${num}}" th:text="${num}"></a>
+  </span>
+  <a th:if="${page.hasNextPage}" th:href="@{'/book/searchBorrow/'+${page.nextPage}}">下一页</a>
+  <a th:if="${page.hasNextPage}" th:href="@{'/book/searchBorrow/'+${page.pages}}">尾页</a>
+</div>
+</body>
+<script>
+        function returnBook(id){
+          var r =confirm("确定归还图书?");
+          if(r){
+            window.location.href='http://localhost:8080/ssm02/book/returnBook/'+id;
+          }
+        }
+        function returnConfirm(id){
+          var r =confirm("确定图书已经归还?");
+          if(r){
+            window.location.href='http://localhost:8080/ssm02/book/returnConfirm/'+id;
+          }
+        }
+</script>
+</html>

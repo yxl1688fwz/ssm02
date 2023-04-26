@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>修改图书</title>
+</head>
+<script th:src="@{/js/jquery.min.js}"></script>
+<body>
+<!-- 添加和编辑图书的模态窗口 -->
+<div class="modal fade" id="addOrEditModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="myModalLabel">图书信息</h3>
+            </div>
+            <div class="modal-body">
+                <form id="addOrEditBook" th:action="@{'/book/edit/'+${book.bookId}}">
+                    <table id="addOrEditTab" class="table table-bordered table-striped" width="800px">
+                        <tr>
+                            <td>图书名称</td>
+                            <td><input class="form-control" placeholder="图书名称" name="bookName" id="ebname"
+                                       th:value="${book.bookName}"></td>
+                            <td>标准ISBN</td>
+                            <td><input class="form-control" placeholder="标准ISBN" name="bookIsbn" id="ebisbn"
+                                       th:value="${book.bookIsbn}"></td>
+                        </tr>
+                        <tr>
+                            <td>出版社</td>
+                            <td><input class="form-control" placeholder="出版社" name="bookPress" id="ebpress"
+                                       th:value="${book.bookPress}"></td>
+                            <td>作者</td>
+                            <td><input class="form-control" placeholder="作者" name="bookAuthor" id="ebauthor"
+                                       th:value="${book.bookAuthor}"></td>
+                        </tr>
+                        <tr>
+                            <td>书籍页数</td>
+                            <td><input class="form-control" placeholder="书籍页数" name="bookPagination" id="ebpagination"
+                                       th:value="${book.bookPagination}"></td>
+                            <td>书籍价格<br/></td>
+                            <td><input class="form-control" placeholder="书籍价格" name="bookPrice" id="ebprice"
+                                        th:value="${book.bookPrice}"></td>
+                        </tr>
+                        <tr>
+                            <td>上架状态</td>
+                            <td>
+                                <select class="form-control" id="ebstatus" name="bookStatus" >
+                                    <option value="0">上架</option>
+                                    <option value="3">下架</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </table>
+            <div class="modal-footer">
+                <button class="btn btn-success" data-dismiss="modal" aria-hidden="true" id="aoe"
+                        type="submit" onclick="func()">保存
+                </button>
+                <button class="btn btn-default" data-dismiss="modal" aria-hidden="true"
+                        type="button" onclick="exit()">关闭</button>
+            </div>
+            </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    function exit() {
+        window.location.href="http://localhost:8080/ssm02/book/search/1"
+        return false;
+    }
+    function func(){
+        return true;
+    }
+
+</script>
+</html>

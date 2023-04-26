@@ -1,0 +1,121 @@
+<html  xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>图书管理</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
+    <link rel="stylesheet" th:href="@{/css/AdminLTE.css}">
+    <link rel="stylesheet" th:href="@{/css/pagination.css}">
+    <script th:src="@{/js/jquery.min.js}"></script>
+</head>
+<body class="hold-transition skin-red sidebar-mini">
+<!-- .box-body -->
+<div class="box-header with-border">
+    <h3 class="box-title">图书借阅</h3>
+</div>
+<div class="box-body">
+    <!--新增按钮：如果当前登录用户是管理员，页面展示新增按钮-->
+    <div th:if="${session.loginUser.userRole =='ADMIN'}">
+        <div class="pull-left">
+            <div class="form-group form-inline">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default" title="新建" data-toggle="modal"
+                            data-target="#addOrEditModal" onclick="addbook()"> 新增
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--新增按钮 /-->
+    <!--工具栏 数据搜索 -->
+    <div class="box-tools pull-right">
+        <div class="has-feedback">
+            <form th:action="@{/book/search/1}" method="post">
+                图书名称：<input name="bookName" th:value="${book.bookName}">&nbsp;&nbsp;
+                图书作者：<input name="bookAuthor" th:value="${book.bookAuthor}">&nbsp;&nbsp;
+                出版社：<input name="bookPress" th:value="${book.bookPress}">&nbsp;
+                <input class="btn btn-default" type="submit" value="查询">
+            </form>
+        </div>
+    </div>
+    <!--工具栏 数据搜索 /-->
+    <!-- 数据列表 -->
+    <div class="table-box">
+        <!-- 数据表格 -->
+        <table id="dataList" class="table table-bordered table-striped table-hover dataTable text-center">
+            <thead>
+            <tr>
+                <th class="sorting_asc">图书名称</th>
+                <th class="sorting">图书作者</th>
+                <th class="sorting">出版社</th>
+                <th class="sorting">标准ISBN</th>
+                <th class="sorting">书籍状态</th>
+                <th class="sorting">借阅人</th>
+                <th class="sorting">借阅时间</th>
+                <th class="sorting">预计归还时间</th>
+                <th class="text-center">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+                <tr th:each="book:${page.list}">
+                    <td th:text="${book.bookName}"></td>
+                    <td th:text="${book.bookAuthor}"></td>
+                    <td th:text="${book.bookPress}"></td>
+                    <td th:text="${book.bookIsbn}"></td>
+                    <td th:switch="${book.bookStatus}">
+                        <span th:case="0">可借阅</span>
+                        <span th:case="1">借阅中</span>
+                        <span th:case="2">归还中</span>
+                    </td>
+                    <td th:text="${book.bookBorrower}"></td>
+                    <td th:text="${book.bookBorrowtime}"></td>
+                    <td th:text="${book.bookReturntime}"></td>
+                    <td class="text-center">
+                            <button th:if="${book.bookStatus=='0'}" type="submit"
+                                    class="btn bg-olive btn-xs" data-toggle="modal" data-target="#borrowModal"
+                                    th:onclick="'borrowBookById('+${book.bookId}+')'"> 借阅
+                            </button>
+                            <button th:if="${book.bookStatus =='1'||book.bookStatus =='2'}"
+                                type="button" class="btn bg-olive btn-xs" disabled="disabled">借阅
+                            </button>
+                        <button th:if="${session.loginUser.userRole =='ADMIN'}"
+                                type="button" class="btn bg-olive btn-xs" data-toggle="modal"
+                                data-target="#addOrEditModal"
+                                th:onclick="'editBookById('+${book.bookId}+')'"> 编辑
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <!--数据表格/-->
+
+    </div>
+    <!--数据列表/-->
+</div>
+<!-- /.box-body -->
+<div style="border-bottom: pink 2px solid;text-align: right;padding-right: 30px">
+    <a th:if="${page.hasPreviousPage}" th:href="@{/book/search/1}">首页</a>
+    <a th:if="${page.hasPreviousPage}" th:href="@{'/book/search/'+${page.prePage}}">上一页</a>
+    <span th:each="num : ${page.navigatepageNums}" >
+    <a th:if="${page.pageNum==num}" style="color: red" th:href="@{'/book/search/'+${num}}" th:text="'['+${num}+']'"></a>
+    <a th:if="${page.pageNum!=num}" th:href="@{'/book/search/'+${num}}" th:text="${num}"></a>
+  </span>
+    <a th:if="${page.hasNextPage}" th:href="@{'/book/search/'+${page.nextPage}}">下一页</a>
+    <a th:if="${page.hasNextPage}" th:href="@{'/book/search/'+${page.pages}}">尾页</a>
+</div>
+
+</body>
+<script>
+    //查询id对应的图书信息，并将图书信息回显到编辑或借阅的窗口中
+    function borrowBookById(id) {
+        window.location.href='http://localhost:8080/ssm02/book/to/book_modal/'+id;
+    }
+    //根据id修改图书
+    function editBookById(id) {
+        window.location.href='http://localhost:8080/ssm02/book/to/book_edit/'+id;
+    }
+    //新增图书
+    function addbook() {
+        window.location.href="http://localhost:8080/ssm02/book/to/book_add";
+    }
+</script>
+</html>

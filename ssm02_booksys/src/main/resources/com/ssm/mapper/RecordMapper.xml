@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+    namespace: 名称空间
+-->
+<mapper namespace="com.ssm.mapper.RecordMapper">
+
+
+    <insert id="addRecord">
+        insert into record(record_bookname, record_bookisbn,record_borrower,
+                           record_borrowtime, record_remandtime)
+        VALUES (#{recordBookname},#{recordBookisbn},#{recordBorrower},
+                #{recordBorrowtime},#{recordRemandtime})
+    </insert>
+
+    <select id="searchRecords" resultType="record">
+        select * from record
+        <where>
+            <if test="recordBorrower!=null and recordBorrower!='' ">
+                record_borrower like concat('%',#{recordBorrower},'%')
+            </if>
+            <if test="recordBookname != null and recordBookname!=''">
+                and record_bookname like concat('%',#{recordBookname},'%')
+            </if>
+        </where>
+            order by record_remandtime DESC
+    </select>
+</mapper>

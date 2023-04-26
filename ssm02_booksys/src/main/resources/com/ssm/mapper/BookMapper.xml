@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+    namespace: 名称空间
+-->
+<mapper namespace="com.ssm.mapper.BookMapper">
+    <insert id="addBook">
+        insert into book(book_name,book_isbn,book_pagination,book_author,book_press,book_price,book_status)
+        VALUES (#{bookName},#{bookIsbn},#{bookPagination},#{bookAuthor},#{bookPress},#{bookPrice},#{bookStatus});
+    </insert>
+    <!--更新图书-->
+    <update id="updateBook">
+        update book
+        <set>
+            <if test="bookName!=null">
+                book_name=#{bookName},
+            </if>
+            <if test="bookIsbn!=null">
+                book_isbn=#{bookIsbn},
+            </if>
+            <if test="bookPress!=null">
+                book_press=#{bookPress},
+            </if>
+            <if test="bookAuthor!=null">
+                book_author=#{bookAuthor},
+            </if>
+            <if test="bookPagination!=null">
+                book_pagination=#{bookPagination},
+            </if>
+            <if test="bookPrice!=null">
+                book_price=#{bookPrice},
+            </if>
+            <if test="bookUploadtime!=null">
+                book_uploadtime=#{bookUploadtime},
+            </if>
+            <if test="bookStatus!=null and bookStatus!=''">
+                book_status=#{bookStatus},
+            </if>
+            <if test="bookBorrower!=null">
+                book_borrower=#{bookBorrower},
+            </if>
+            <if test="bookBorrowtime!=null">
+                book_borrowtime=#{bookBorrowtime},
+            </if>
+            <if test="bookReturntime!=null">
+                book_returntime=#{bookReturntime},
+            </if>
+        </set>
+        where book_id=#{bookId};
+    </update>
+
+    <!--查询所有图书-->
+    <select id="getAllBook" resultType="book">
+        select * from book
+        where book_status!='3' order by book_uploadtime DESC
+
+    </select>
+
+    <!--根据id查询图书-->
+    <select id="getBookById" parameterType="int" resultType="book">
+        select * from book where book_id=#{id}
+    </select>
+
+    <!--模糊条件查询-->
+    <select id="searchBook" resultType="book">
+        select * from book
+        <where>
+            <if test="bookName!=null and bookName!=''">
+                book_name like concat('%',#{bookName},'%')
+            </if>
+            <if test="bookAuthor != null and bookAuthor!=''">
+                and book_author like concat('%',#{bookAuthor},'%')
+            </if>
+            <if test="bookPress != null and bookPress!=''">
+                and book_press like concat('%',#{bookPress},'%')
+            </if>
+        </where>
+    </select>
+    <!--查询借阅中，归还中的图书-->
+    <select id="searchMyBorrow" resultType="book">
+        select * from book
+        <where>
+            <if test="bookName!=null and bookName!=''">
+                book_name like concat('%',#{bookName},'%')
+            </if>
+            <if test="bookAuthor != null and bookAuthor!=''">
+                and book_author like concat('%',#{bookAuthor},'%')
+            </if>
+            <if test="bookPress != null and bookPress!=''">
+                and book_press like concat('%',#{bookPress},'%')
+            </if>
+            <if test="bookBorrower!=null and bookBorrower!='' ">
+                and book_borrower=#{bookBorrower}
+            </if>
+            <if test="true">
+                and book_status in('1','2')
+            </if>
+        </where>
+    </select>
+    <!--查询所有借阅图书-->
+    <select id="searchBorrow" resultType="book">
+        select * from book
+        <where>
+            <if test="bookName!=null and bookName!=''">
+                book_name like concat('%',#{bookName},'%')
+            </if>
+            <if test="bookAuthor != null and bookAuthor!=''">
+                and book_author like concat('%',#{bookAuthor},'%')
+            </if>
+            <if test="bookPress != null and bookPress!=''">
+                and book_press like concat('%',#{bookPress},'%')
+            </if>
+            <if test="true">
+                and book_status in('1','2')
+            </if>
+        </where>
+    </select>
+
+
+</mapper>
